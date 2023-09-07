@@ -15,6 +15,6 @@
          */
         public virtual Reclamo Reclamo { get; set; }
         public int CarritoId { get; set; }
-        public CarritoItem Carrito { get; set; }
+        public Carrito Carrito { get; set; }
     }
 }
