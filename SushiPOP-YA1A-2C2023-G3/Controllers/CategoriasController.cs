@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,9 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 {
     public class CategoriasController : Controller
     {
-        private readonly dbContext _context;
+        private readonly DbContext _context;
 
-        public CategoriasController(dbContext context)
+        public CategoriasController(DbContext context)
         {
             _context = context;
         }
@@ -45,6 +46,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Categorias/Create
+        [Authorize(Roles ="EMPLEADO")]
         public IActionResult Create()
         {
             return View();
@@ -67,6 +69,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Categorias/Edit/5
+        [Authorize(Roles ="EMPLEADO")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Categoria == null)
@@ -118,6 +121,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Categorias/Delete/5
+        [Authorize(Roles ="EMPLEADO")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Categoria == null)

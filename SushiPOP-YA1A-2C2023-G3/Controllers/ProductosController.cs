@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,9 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 {
     public class ProductosController : Controller
     {
-        private readonly dbContext _context;
+        private readonly DbContext _context;
 
-        public ProductosController(dbContext context)
+        public ProductosController(DbContext context)
         {
             _context = context;
         }
@@ -21,8 +22,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         // GET: Productos
         public async Task<IActionResult> Index()
         {
-            var dbContext = _context.Producto.Include(p => p.Categoria);
-            return View(await dbContext.ToListAsync());
+            var DbContext = _context.Producto.Include(p => p.Categoria);
+            return View(await DbContext.ToListAsync());
         }
 
         // GET: Productos/Details/5
@@ -45,6 +46,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Productos/Create
+        [Authorize(Roles = "EMPLEADO")]
         public IActionResult Create()
         {
             ViewData["CategoriaId"] = new SelectList(_context.Categoria, "Id", "Id");
@@ -69,6 +71,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Productos/Edit/5
+        [Authorize(Roles ="EMPLEADO")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Producto == null)

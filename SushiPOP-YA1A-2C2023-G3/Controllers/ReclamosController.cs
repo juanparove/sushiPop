@@ -11,9 +11,9 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 {
     public class ReclamosController : Controller
     {
-        private readonly dbContext _context;
+        private readonly DbContext _context;
 
-        public ReclamosController(dbContext context)
+        public ReclamosController(DbContext context)
         {
             _context = context;
         }
@@ -21,8 +21,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         // GET: Reclamos
         public async Task<IActionResult> Index()
         {
-            var dbContext = _context.Reclamo.Include(r => r.Pedido);
-            return View(await dbContext.ToListAsync());
+            var DbContext = _context.Reclamo.Include(r => r.Pedido);
+            return View(await DbContext.ToListAsync());
         }
 
         // GET: Reclamos/Details/5

@@ -11,9 +11,9 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 {
     public class EmpleadosController : Controller
     {
-        private readonly dbContext _context;
+        private readonly DbContext _context;
 
-        public EmpleadosController(dbContext context)
+        public EmpleadosController(DbContext context)
         {
             _context = context;
         }

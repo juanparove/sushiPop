@@ -1,11 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<dbContext>(options =>
+builder.Services.AddDbContext<DbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbContext") ?? throw new InvalidOperationException("Connection string 'dbContext' not found.")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<DbContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 var app = builder.Build();
 
@@ -21,6 +26,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
 
 app.UseAuthorization();
 

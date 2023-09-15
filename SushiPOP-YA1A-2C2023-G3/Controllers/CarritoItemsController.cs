@@ -11,9 +11,9 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 {
     public class CarritoItemsController : Controller
     {
-        private readonly dbContext _context;
+        private readonly DbContext _context;
 
-        public CarritoItemsController(dbContext context)
+        public CarritoItemsController(DbContext context)
         {
             _context = context;
         }
@@ -21,8 +21,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         // GET: CarritoItems
         public async Task<IActionResult> Index()
         {
-            var dbContext = _context.CarritoItem.Include(c => c.Carrito).Include(c => c.Producto);
-            return View(await dbContext.ToListAsync());
+            var DbContext = _context.CarritoItem.Include(c => c.Carrito).Include(c => c.Producto);
+            return View(await DbContext.ToListAsync());
         }
 
         // GET: CarritoItems/Details/5

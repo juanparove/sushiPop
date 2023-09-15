@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,18 +12,19 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 {
     public class ReservasController : Controller
     {
-        private readonly dbContext _context;
+        private readonly DbContext _context;
 
-        public ReservasController(dbContext context)
+        public ReservasController(DbContext context)
         {
             _context = context;
         }
 
         // GET: Reservas
+        [Authorize(Roles = "EMPLEADO")]
         public async Task<IActionResult> Index()
         {
-            var dbContext = _context.Reserva.Include(r => r.Cliente);
-            return View(await dbContext.ToListAsync());
+            var DbContext = _context.Reserva.Include(r => r.Cliente);
+            return View(await DbContext.ToListAsync());
         }
 
         // GET: Reservas/Details/5
@@ -45,6 +47,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Reservas/Create
+        [Authorize(Roles = "CLIENTE")]
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Cliente, "Id", "Id");
@@ -69,6 +72,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Reservas/Edit/5
+        [Authorize(Roles = "EMPLEADO")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Reserva == null)
