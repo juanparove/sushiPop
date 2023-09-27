@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +21,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Reclamos
+        [Authorize(Roles = "EMPLEADO")] //Solo usuarios de tipo empleado pueden leer los mensajes recibidos (RN09)
         public async Task<IActionResult> Index()
         {
             var DbContext = _context.Reclamo.Include(r => r.Pedido);
@@ -26,6 +29,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Reclamos/Details/5
+        [Authorize(Roles = "EMPLEADO")] //Solo usuarios de tipo empleado pueden leer los mensajes recibidos (RN09)
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Reclamo == null)
