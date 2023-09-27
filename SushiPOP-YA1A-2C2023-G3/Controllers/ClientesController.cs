@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Clientes
+        [Authorize(Roles = "EMPLEADO")] //Solo los empleados pueden ver la lista de clientes (RN58)
         public async Task<IActionResult> Index()
         {
               return _context.Cliente != null ? 

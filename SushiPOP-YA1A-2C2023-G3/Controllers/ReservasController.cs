@@ -20,7 +20,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Reservas
-        [Authorize(Roles = "EMPLEADO")]
+        [Authorize(Roles = "EMPLEADO")] //Solo usuarios empleados tienen autorización de Leer y Editar (RN14)
         public async Task<IActionResult> Index()
         {
             var DbContext = _context.Reserva.Include(r => r.Cliente);
@@ -47,7 +47,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Reservas/Create
-        [Authorize(Roles = "CLIENTE")]
+        [Authorize(Roles = "CLIENTE")] //Solo usuarios cliente pueden realizar reservas (RN12)
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Cliente, "Id", "Id");
@@ -72,7 +72,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Reservas/Edit/5
-        [Authorize(Roles = "EMPLEADO")]
+        [Authorize(Roles = "EMPLEADO")] //Solo usuarios empleados tienen autorización de Leer y Editar (RN14)
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Reserva == null)

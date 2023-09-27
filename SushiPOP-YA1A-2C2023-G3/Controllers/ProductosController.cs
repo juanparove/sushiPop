@@ -46,7 +46,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Productos/Create
-        [Authorize(Roles = "EMPLEADO")]
+        [Authorize(Roles = "EMPLEADO")] //Solo usuarios empleados pueden crear productos (RN24)
         public IActionResult Create()
         {
             ViewData["CategoriaId"] = new SelectList(_context.Categoria, "Id", "Id");
@@ -71,7 +71,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Productos/Edit/5
-        [Authorize(Roles ="EMPLEADO")]
+        [Authorize(Roles ="EMPLEADO")] //Solo usuarios de tipo empleados pueden editar (RN30)
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Producto == null)

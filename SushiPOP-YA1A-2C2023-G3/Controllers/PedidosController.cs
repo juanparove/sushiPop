@@ -46,7 +46,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Pedidos/Create
-        [Authorize(Roles ="CLIENTE")]
+        [Authorize(Roles ="CLIENTE")] //Solo usuarios de tipo cliente pueden hacer pedidos (RN40, RN47)
         public IActionResult Create()
         {
             ViewData["CarritoId"] = new SelectList(_context.Carrito, "Id", "Id");
@@ -71,7 +71,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Pedidos/Edit/5
-        [Authorize(Roles ="EMPLEADO")]
+        [Authorize(Roles ="EMPLEADO")] //Los usuarios empleados pueden editar el estado de los pedidos de forma vertical incremental (RN54)
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Pedido == null)
@@ -125,6 +125,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Pedidos/Delete/5
+        [Authorize(Roles = "CLIENTE")]//Los usuarios clientes pueden cancelar el pedido solo si está en estado 1 (RN55)
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Pedido == null)

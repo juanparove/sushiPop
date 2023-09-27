@@ -20,7 +20,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Descuentos
-        [Authorize(Roles ="EMPLEADO")] //Solo los empleados pueden ver la grilla de descuentos
+        [Authorize(Roles ="EMPLEADO")] //Solo los empleados pueden ver la grilla de descuentos (RN38)
         public async Task<IActionResult> Index()
         {
             var DbContext = _context.Descuento.Include(d => d.Producto);
@@ -47,7 +47,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Descuentos/Create
-        [Authorize(Roles ="EMPLEADO")]
+        [Authorize(Roles ="EMPLEADO")] //Solo usuarios de tipo empleados pueden crear descuentos (RN32)
         public IActionResult Create()
         {
             ViewData["ProductoId"] = new SelectList(_context.Set<Producto>(), "Id", "Id");
@@ -72,7 +72,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Descuentos/Edit/5
-        [Authorize(Roles ="EMPLEADO")]
+        [Authorize(Roles ="EMPLEADO")]//Solo usuarios de tipo empleados pueden editar (RN39)
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Descuento == null)

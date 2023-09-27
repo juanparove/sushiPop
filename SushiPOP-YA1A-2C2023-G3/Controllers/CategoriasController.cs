@@ -46,7 +46,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Categorias/Create
-        [Authorize(Roles ="EMPLEADO")]
+        [Authorize(Roles ="EMPLEADO")] //Solo usuarios de tipo empleado pueden crear categorías (RN17)
         public IActionResult Create()
         {
             return View();
@@ -69,7 +69,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Categorias/Edit/5
-        [Authorize(Roles ="EMPLEADO")]
+        [Authorize(Roles ="EMPLEADO")] //Solo usuarios de tipo empleado pueden modificar la categoría (RN20)
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Categoria == null)
@@ -121,7 +121,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Categorias/Delete/5
-        [Authorize(Roles ="EMPLEADO")]
+        [Authorize(Roles ="EMPLEADO")]//Solo usuarios con rol empleado pueden borrar categorías (RN21)
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Categoria == null)

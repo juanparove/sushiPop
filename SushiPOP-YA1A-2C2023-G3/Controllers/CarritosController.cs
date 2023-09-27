@@ -46,7 +46,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Carritos/Create
-        [Authorize(Roles ="Cliente")]
+        [Authorize(Roles ="CLIENTE")]
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Set<Cliente>(), "Id", "Id");
@@ -71,7 +71,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Carritos/Edit/5
-        [Authorize(Roles ="Cliente")]
+        [Authorize(Roles ="CLIENTE")] //El carrito únicamente puede ser editado por el usuario cliente propietario (RN43)
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Carrito == null)
@@ -125,7 +125,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Carritos/Delete/5
-        [Authorize(Roles ="Cliente")]
+        [Authorize(Roles ="Cliente")] //Solo los usuarios cliente propietarios de ese carrito pueden cancelar el carrito (RN44)
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Carrito == null)
