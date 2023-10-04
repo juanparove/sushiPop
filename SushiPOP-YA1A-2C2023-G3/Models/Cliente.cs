@@ -4,6 +4,7 @@ namespace SushiPop.Models
 {
     public class Cliente : Usuario
     {
+        [Display(Name = "Numero de cliente")]
         [Required(ErrorMessage = "Este campo es obligatorio")]
         public int NumeroCliente { get; set; }
 

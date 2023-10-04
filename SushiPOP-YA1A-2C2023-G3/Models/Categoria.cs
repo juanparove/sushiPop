@@ -1,12 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SushiPOP_YA1A_2C2023_G3.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SushiPop.Models
 {
     public class Categoria
     {
-        [Required(ErrorMessage = "Este campo es obligatorio")]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
+        [MaxLength(100, ErrorMessage = ErrorViewModel.CaracteresMaximos)]
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         

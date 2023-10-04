@@ -1,26 +1,46 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SushiPOP_YA1A_2C2023_G3.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SushiPop.Models
 {
     public class Usuario
     {
-        [Required(ErrorMessage="Este campo es obligatorio")]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
+        [MinLength(5, ErrorMessage = ErrorViewModel.CaracteresMinimos)]
+        [MaxLength(30, ErrorMessage = ErrorViewModel.CaracteresMaximos)]
         public string Nombre { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
+        [MinLength(5, ErrorMessage = ErrorViewModel.CaracteresMinimos)]
+        [MaxLength(30, ErrorMessage = ErrorViewModel.CaracteresMaximos)]
         public string Apellido { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Display(Name = "Dirección")]
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
+        [MaxLength(100, ErrorMessage = ErrorViewModel.CaracteresMaximos)]
         public string Direccion { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Display(Name = "Teléfono")]
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
+        [MinLength(10, ErrorMessage = ErrorViewModel.CaracteresMinimos)]
+        [MaxLength(10, ErrorMessage = ErrorViewModel.CaracteresMaximos)]
         public string Telefono { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Display(Name = "Fecha de nacimiento")]
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public DateTime FechaNacimiento { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Display(Name = "Fecha de alta")]
         public DateTime FechaAlta { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public bool Activo { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Display(Name = "Correo electrónico")]
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
+        [MaxLength(100, ErrorMessage = ErrorViewModel.CaracteresMaximos)]
         public string Email { get; set; }
     }
 }

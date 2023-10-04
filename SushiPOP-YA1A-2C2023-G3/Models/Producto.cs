@@ -1,20 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SushiPOP_YA1A_2C2023_G3.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SushiPop.Models
 {
     public class Producto
     {
-        [Required(ErrorMessage = "Este campo es obligatorio")]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required( ErrorMessage = ErrorViewModel.CampoRequerido)]
+        [MaxLength(100,ErrorMessage = ErrorViewModel.CaracteresMaximos)]
         public string Nombre { get; set; }
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
+        [MinLength(20, ErrorMessage = ErrorViewModel.CaracteresMinimos)]
+        [MaxLength(250, ErrorMessage = ErrorViewModel.CaracteresMaximos)]
         public string Descripcion { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public decimal Precio { get; set; }
+        
         public string Foto { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public int Stock { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public decimal Costo { get; set; }
         
         /*

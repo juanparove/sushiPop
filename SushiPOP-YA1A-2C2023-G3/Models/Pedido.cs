@@ -1,26 +1,36 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SushiPOP_YA1A_2C2023_G3.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SushiPop.Models
 {
     public class Pedido
     {
-        [Required(ErrorMessage = "Este campo es obligatorio")]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public int NroPedido { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public DateTime FechaCompra { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public decimal Subtotal { get; set; }
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public decimal GastoEnvio { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public decimal Total { get; set; }
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public int Estado { get; set; }
 
         /*
          * Relaciones
          */
         public virtual Reclamo Reclamo { get; set; }
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public int CarritoId { get; set; }
         public Carrito Carrito { get; set; }
     }

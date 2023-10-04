@@ -1,18 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SushiPOP_YA1A_2C2023_G3.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SushiPop.Models
 {
     public class Contacto
     {
-        [Required(ErrorMessage = "Este campo es obligatorio")]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Display(Name = "Nombre completo")]
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
+        [MaxLength(255, ErrorMessage = ErrorViewModel.CaracteresMaximos)]
         public string NombreCompleto { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Display(Name = "Correo electrónico")]
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public string Email { get; set; }
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+
+        [Display(Name = "Teléfono")]
+        [MinLength(10, ErrorMessage = ErrorViewModel.CaracteresMinimos)]
+        [MaxLength(10, ErrorMessage = ErrorViewModel.CaracteresMaximos)]
         public string Telefono { get; set; }
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public string Mensaje { get; set; }
+
+        [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public bool Leido { get; set; }
     }
 }
