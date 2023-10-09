@@ -55,7 +55,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         {
             var usuario = await _userManager.GetUserAsync(User);
 
-            var cliente = _context.Cliente.FirstOrDefault(c => c.Email.ToUpper() == usuario.NormalizedEmail); //normalized email == el email pasado a mayus. Lo que pusimos en el form pero en mayus
+            var cliente = await _context.Cliente.Where(c => c.Email.ToUpper() == usuario.NormalizedEmail).FirstOrDefaultAsync();
 
             Reserva reserva = new Reserva()
             {
