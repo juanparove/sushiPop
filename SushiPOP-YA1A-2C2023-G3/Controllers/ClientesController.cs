@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -47,9 +48,16 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Clientes/Create
-        public IActionResult Create()
+        public IActionResult Create(IdentityUser? user)
         {
-            return View();
+            if (user == null) return NotFound();
+
+            Cliente cliente = new Cliente
+            {
+                Email = user.Email
+            };
+
+            return View(cliente);
         }
 
         // POST: Clientes/Create
@@ -57,15 +65,34 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NumeroCliente,Id,Nombre,Apellido,Direccion,Telefono,FechaNacimiento,FechaAlta,Activo,Email")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Direccion,Telefono,FechaNacimiento,Email")] Cliente cliente)
         {
             if (ModelState.IsValid)
             {
+
+                //Asignacion de numero de cliente CHEQUEAR
+                var listaClientes = _context.Cliente.ToList();
+
+                if(listaClientes == null)
+                {
+                    cliente.NumeroCliente = 4200000;
+                }
+                else
+                {
+                    cliente.NumeroCliente = listaClientes.Last().NumeroCliente + 1;
+                }
+                
+
+                //Asignacion fecha de alta
+                cliente.FechaAlta = DateTime.Now;
+                //Asignacion estado
+                cliente.Activo = true;
+
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(cliente);
+            return View(cliente); 
         }
 
         // GET: Clientes/Edit/5

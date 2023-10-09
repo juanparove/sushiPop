@@ -6,7 +6,7 @@ namespace SushiPop.Models
     {
         [Display(Name = "Numero de cliente")]
         [Required(ErrorMessage = "Este campo es obligatorio")]
-        public int NumeroCliente { get; set; }
+        public int? NumeroCliente { get; set; }
 
         /*
          * Relaciones
@@ -15,3 +15,4 @@ namespace SushiPop.Models
         public ICollection<Carrito> Carritos { get; set; }
     }
 }
+ 

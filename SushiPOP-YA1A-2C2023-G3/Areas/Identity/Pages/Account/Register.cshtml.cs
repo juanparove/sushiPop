@@ -35,7 +35,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger
+            ILogger<RegisterModel> logger,
+            RoleManager<IdentityRole> roleManager
             //IEmailSender emailSender
             )
         {
@@ -44,7 +45,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
-           // _emailSender = emailSender;
+            // _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -104,6 +106,34 @@ namespace SushiPOP_YA1A_2C2023_G3.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+
+            if (!_roleManager.RoleExistsAsync("ADMIN").GetAwaiter().GetResult())
+            {
+             _roleManager.CreateAsync(new IdentityRole("ADMIN")).GetAwaiter().GetResult();
+
+                IdentityUser user = CreateUser();
+                string email, usuario;
+                email = usuario = "admin@ort.edu.ar";
+                await _userStore.SetNormalizedUserNameAsync(user, email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, usuario, CancellationToken.None);
+                var result = await _userManager.CreateAsync(user, "Password1!");
+
+                if(result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "ADMIN");
+                }
+
+            }
+            if (!_roleManager.RoleExistsAsync("EMPLEADO").GetAwaiter().GetResult())
+            {
+                _roleManager.CreateAsync(new IdentityRole("EMPLEADO")).GetAwaiter().GetResult();
+            }
+            if(!_roleManager.RoleExistsAsync("CLIENTE").GetAwaiter().GetResult())
+            {
+                _roleManager.CreateAsync(new IdentityRole("CLIENTE")).GetAwaiter().GetResult();
+            }
+
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -112,9 +142,11 @@ namespace SushiPOP_YA1A_2C2023_G3.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            var user = CreateUser();
+
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -122,29 +154,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    await _userManager.AddToRoleAsync(user, "CLIENTE");
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
                 }
                 foreach (var error in result.Errors)
                 {
@@ -153,7 +164,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
-            return Page();
+            return RedirectToAction("Create","Clientes", user);
         }
 
         private IdentityUser CreateUser()
