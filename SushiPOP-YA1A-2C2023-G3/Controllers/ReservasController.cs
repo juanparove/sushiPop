@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
     public class ReservasController : Controller
     {
         private readonly DbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ReservasController(DbContext context)
+        public ReservasController(DbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Reservas
@@ -48,10 +51,21 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 
         // GET: Reservas/Create
         [Authorize(Roles = "CLIENTE")] //Solo usuarios cliente pueden realizar reservas (RN12)
-        public IActionResult Create()
+        public async Task<IActionResult>  Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Cliente, "Id", "Id");
-            return View();
+            var usuario = await _userManager.GetUserAsync(User);
+
+            var cliente = _context.Cliente.FirstOrDefault(c => c.Email.ToUpper() == usuario.NormalizedEmail); //normalized email == el email pasado a mayus. Lo que pusimos en el form pero en mayus
+
+            Reserva reserva = new Reserva()
+            {
+                ClienteId = cliente.Id,
+                Nombre = cliente.Nombre,
+                Apellido = cliente.Apellido,
+
+            };
+
+            return View(reserva);
         }
 
         // POST: Reservas/Create
