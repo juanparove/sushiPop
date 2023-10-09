@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
     public class EmpleadosController : Controller
     {
         private readonly DbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EmpleadosController(DbContext context)
+        public EmpleadosController(DbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager; 
         }
 
         // GET: Empleados
@@ -61,9 +64,35 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(empleado);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                //Crea el usuario
+                IdentityUser user = new IdentityUser();
+                user.Email = empleado.Email;
+                user.UserName = empleado.Email;
+                var result = await _userManager.CreateAsync(user, "Password1!");
+
+
+                //Asignacion fechad de alta
+                empleado.FechaAlta = DateTime.Now;
+
+                //Asignacion estado
+                empleado.Activo = true;
+
+
+                if (result.Succeeded)
+                {
+                    //Asignacion de rol
+                    await _userManager.AddToRoleAsync(user, "EMPLEADO");
+
+                    //Crea empleado
+                    _context.Add(empleado);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+
+
+
             }
             return View(empleado);
         }
