@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
     public class ReclamosController : Controller
     {
         private readonly DbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ReclamosController(DbContext context)
+        public ReclamosController(DbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Reclamos
@@ -49,10 +52,20 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Reclamos/Create
-        public IActionResult Create()
+        public async IActionResult Create()
         {
-            ViewData["PedidoId"] = new SelectList(_context.Pedido, "Id", "Id");
-            return View();
+            var usuario = await _userManager.GetUserAsync(User);
+            var cliente = await _context.Cliente.Where(c => c.Email == usuario.Email).FirstOrDefaultAsync();
+
+            Reclamo reclamo = new Reclamo()
+            {
+                NombreCompleto = cliente.Nombre + cliente.Apellido,
+                Email = cliente.Email,
+                Telefono = cliente.Telefono
+            };
+
+            //****CHEQUEAR, no se si está bien que devuelva View(reclamo) jajaj
+            return View(reclamo);
         }
 
         // POST: Reclamos/Create
@@ -64,6 +77,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         {
             if (ModelState.IsValid)
             {
+
+
                 _context.Add(reclamo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
