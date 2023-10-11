@@ -52,7 +52,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Reclamos/Create
-        public async IActionResult Create()
+        public async Task<IActionResult>  Create()
         {
             var usuario = await _userManager.GetUserAsync(User);
             var cliente = await _context.Cliente.Where(c => c.Email == usuario.Email).FirstOrDefaultAsync();

@@ -50,6 +50,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Empleados/Create
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Create()
         {
             return View();

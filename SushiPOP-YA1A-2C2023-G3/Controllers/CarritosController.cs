@@ -125,7 +125,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Carritos/Delete/5
-        [Authorize(Roles ="Cliente")] //Solo los usuarios cliente propietarios de ese carrito pueden cancelar el carrito (RN44)
+        [Authorize(Roles ="CLIENTE")] //Solo los usuarios cliente propietarios de ese carrito pueden cancelar el carrito (RN44)
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Carrito == null)
