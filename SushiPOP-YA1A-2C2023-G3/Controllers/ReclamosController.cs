@@ -16,11 +16,13 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
     {
         private readonly DbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public ReclamosController(DbContext context, UserManager<IdentityUser> userManager)
+        public ReclamosController(DbContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         // GET: Reclamos
@@ -54,18 +56,37 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         // GET: Reclamos/Create
         public async Task<IActionResult>  Create()
         {
-            var usuario = await _userManager.GetUserAsync(User);
-            var cliente = await _context.Cliente.Where(c => c.Email == usuario.Email).FirstOrDefaultAsync();
-
-            Reclamo reclamo = new Reclamo()
+            if (_signInManager.IsSignedIn(User))
             {
-                NombreCompleto = cliente.Nombre + cliente.Apellido,
-                Email = cliente.Email,
-                Telefono = cliente.Telefono
-            };
+                // si es cliente, muestro el formulario con los pedidos
+                if (User.IsInRole("CLIENTE"))
+                {
+                    var usuario = await _userManager.GetUserAsync(User);
+                    var cliente = await _context.Cliente.Where(c => c.Email == usuario.Email).FirstOrDefaultAsync();
 
-            //****CHEQUEAR, no se si está bien que devuelva View(reclamo) jajaj
-            return View(reclamo);
+                    Reclamo reclamo = new Reclamo()
+                    {
+                        NombreCompleto = cliente.Nombre + " " + cliente.Apellido,
+                        Email = cliente.Email,
+                        Telefono = cliente.Telefono
+                    };
+
+                    // armar lista de pedidos del cliente
+
+                    return View(reclamo);
+                }
+                // si tiene otro rol, error
+                else
+                {
+                    return BadRequest();
+                }
+            }
+
+            // si no esta logueado
+            // retorno la vista y el cliente carga sus datos
+            // y el numero de pedido
+            // cuando hace el post, se valida que el pedido exista
+            return View();
         }
 
         // POST: Reclamos/Create

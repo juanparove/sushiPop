@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,14 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
     public class ContactosController : Controller
     {
         private readonly DbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public ContactosController(DbContext context)
+        public ContactosController(DbContext context, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         // GET: Contactos
@@ -47,8 +52,33 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         }
 
         // GET: Contactos/Create
-        public IActionResult Create()
+        public async Task <IActionResult> Create()
         {
+            if (_signInManager.IsSignedIn(User))
+            {
+                // si es cliente, muestro el formulario con los pedidos
+                if (User.IsInRole("CLIENTE"))
+                {
+                    var usuario = await _userManager.GetUserAsync(User);
+                    var cliente = await _context.Cliente.Where(c => c.Email == usuario.Email).FirstOrDefaultAsync();
+
+                    Contacto contacto = new Contacto()
+                    {
+                        NombreCompleto = cliente.Nombre + " " + cliente.Apellido,
+                        Email = cliente.Email,
+                        Telefono = cliente.Telefono
+                    };
+
+             
+
+                    return View(contacto);
+                }
+                // si tiene otro rol, error
+                else
+                {
+                    return BadRequest();
+                }
+            }
             return View();
         }
 
