@@ -15,5 +15,35 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: 'Nunito', sans-serif;
 }
+
+.logo-navbar{
+    height: 50px;
+}
+
+header{
+    font-weight: 700;
+}
+
+.login-icon{
+    height: 25px;
+    margin-right: 25px
+    
+}
+
+.enlaces-footer {
+    display: block;
+    text-decoration: none;
+    color: #FFFFFF
+}
+footer {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.firma {
+  color:#F7F0E5;
+  font-size: 10px
+}
+

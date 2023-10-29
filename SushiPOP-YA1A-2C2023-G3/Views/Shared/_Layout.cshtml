@@ -10,23 +10,61 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 text-center align-items-center">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SushiPOP_YA1A_2C2023_G3</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="logo-navbar" src="~/Images/logo.png" alt="Logo"/>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Combos</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Piezas</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Salads</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Entradas</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Salsas</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Bebidas</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Postres</a>
+                        </li>
+
+
+                        
+
                     </ul>
                 </div>
+
+                <a><img class="logo-navbar login-icon" src="~/Images/usuario.png" alt="Login" /></a>
+                <a><img class="logo-navbar login-icon" src="~/Images/carrito-de-compras.png" alt="Carrito" /></a>
+
+
+
             </div>
         </nav>
     </header>
@@ -38,7 +76,31 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - SushiPOP_YA1A_2C2023_G3 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row text-center">
+                <div class="col-4 text-center align-items-center">
+                    <img src="~/Images/logo_sin_fondo.png"/>
+                </div>
+                <div class="col-4">
+                    <a class="enlaces-footer">Combos</a>
+                    <a class="enlaces-footer">Piezas</a>
+                    <a class="enlaces-footer">Salads</a>
+                    <a class="enlaces-footer">Entradas</a>
+                    <a class="enlaces-footer">Salsas</a>
+                    <a class="enlaces-footer">Bebidas</a>
+                    <a class="enlaces-footer">Postres</a>
+                </div>
+                <div class="col-4">
+                    <a class="enlaces-footer">Contacto</a>
+                    <a class="enlaces-footer">Seguir pedido</a>
+                    <a class="enlaces-footer">Reclamos</a>
+                    <a class="enlaces-footer">Legales</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center align-items-center">
+                    <p class="firma">© 2023 SushiPOP - Desarrollo Web por Grupo 3 ORT</p>
+                </div>
+            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
