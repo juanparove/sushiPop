@@ -1,8 +1,10 @@
 ﻿using SushiPOP_YA1A_2C2023_G3.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SushiPop.Models
 {
+    [Table("T_PRODUCTO")]
     public class Producto
     {
         public int Id { get; set; }
@@ -32,7 +34,7 @@ namespace SushiPop.Models
          */
         public int CategoriaId { get; set; }
         public Categoria Categoria { get; set; }
-        public ICollection<Descuento> Descuentos { get; set; }
-        public ICollection<CarritoItem> CarritosItems { get; set; }
+        public ICollection<Descuento>? Descuentos { get; set; }
+        public ICollection<CarritoItem>? CarritosItems { get; set; }
     }
 }

@@ -21,6 +21,6 @@ namespace SushiPop.Models
         public int ClienteId { get; set; }
         public Cliente Cliente { get; set; }
         public virtual Pedido Pedido { get; set; }
-        public ICollection<CarritoItem> CarritosItems { get; set; }
+        public ICollection<CarritoItem>? CarritosItems { get; set; }
     }
 }

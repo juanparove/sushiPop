@@ -60,7 +60,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                 if (User.IsInRole("CLIENTE"))
                 {
                     var usuario = await _userManager.GetUserAsync(User);
-                    var cliente = await _context.Cliente.Where(c => c.Email == usuario.Email).FirstOrDefaultAsync();
+                    var cliente = await _context.Cliente.Where(c => c.Email.ToUpper() == usuario.NormalizedEmail).FirstOrDefaultAsync();
 
                     Contacto contacto = new Contacto()
                     {
