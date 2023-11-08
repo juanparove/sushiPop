@@ -114,7 +114,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Areas.Identity.Pages.Account
                 IdentityUser user = CreateUser();
                 string email, usuario;
                 email = usuario = "admin@ort.edu.ar";
-                await _userStore.SetNormalizedUserNameAsync(user, email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, usuario, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, "Password1!");
 
