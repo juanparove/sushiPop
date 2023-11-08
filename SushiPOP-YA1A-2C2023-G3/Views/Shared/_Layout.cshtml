@@ -29,7 +29,20 @@
                         @if(User.IsInRole("ADMIN"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="empleados/create">Crear Empleado</a>
+                                <a class="nav-link text-dark" href="empleados">Empleados</a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("EMPLEADO"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("EMPLEADO"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="productos">Productos</a>
                             </li>
                         }
 
