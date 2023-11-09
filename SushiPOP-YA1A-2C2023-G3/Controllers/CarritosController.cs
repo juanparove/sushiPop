@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
     public class CarritosController : Controller
     {
         private readonly DbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public CarritosController(DbContext context)
+        public CarritosController(DbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Carritos
@@ -60,8 +63,40 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Procesado,Cancelado,ClienteId")] Carrito carrito)
         {
+            var user = await _userManager.GetUserAsync(User);
+            var cliente = await _context.Cliente.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
+
+
             if (ModelState.IsValid)
             {
+                var pedido = await _context.Pedido
+               .Include(p => p.Carrito)
+               .Where(p => p.Carrito.ClienteId == cliente.Id
+                    &&
+                    p.Estado == 1)
+                .FirstOrDefaultAsync();
+
+                if (pedido != null)
+                {
+                    return NotFound();
+                }
+
+
+                var listaPedidos = await _context.Pedido
+                                         .Include(p => p.Carrito)
+                                 .Where(p => p.Carrito.ClienteId == cliente.Id
+                                    &&
+                                    p.FechaCompra.Date == DateTime.Now.Date)
+                                 .ToListAsync();
+
+                if (listaPedidos.Count > 3)
+                {
+
+                    return NotFound();
+                }
+
+
+
                 _context.Add(carrito);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
