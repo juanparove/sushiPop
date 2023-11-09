@@ -33,7 +33,7 @@ namespace SushiPop.Models
          * Relaciones
          */
         public int CategoriaId { get; set; }
-        public Categoria Categoria { get; set; }
+        public Categoria? Categoria { get; set; }
         public ICollection<Descuento>? Descuentos { get; set; }
         public ICollection<CarritoItem>? CarritosItems { get; set; }
     }
