@@ -1,5 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var culture = new System.Globalization.CultureInfo("es-ES");
+    var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
+    DateTime ClockInfoFromSystem = DateTime.Now;
+    var dayNumber = (int)ClockInfoFromSystem.DayOfWeek;
+
 }
 
 <div class="text-center">
@@ -13,8 +18,8 @@
         <img class="position-relative" src="https://ch3301files.storage.live.com/y4mv12vXAucLb0KAdeQci335sj-UPHMUiHd6jEp0fpjH9Cz_P4Ny1Lr5rqsWbL8Gd1nXN0lmw3ccu2uui9ks_brJI8U6bXtyLcTB95D0tIZHpNcL-NGsL6SzwRoyNZldto7IIlLZxD8VQtw6lt0pU5L83jS7_7qhiHt2MX-43JaOn6xailvUMOGQtOufWMkgHtPinrCw7aRQ8ZHNzF52ygArA/bg_hero.png?psid=1&width=1440&height=380">
 
 
-        <span class=" position-absolute family-colour:#FFFFFF">Hoy DD ahorrá un N% en PPP!</span>
-
+        <span style=" {position:absolute; color:#FFFFFF}">Hoy @day ahorrá un N% en PPP!</span>
+        
         
     </div>
 
