@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
     public class CarritoItemsController : Controller
     {
         private readonly DbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        
 
         public CarritoItemsController(DbContext context)
         {
@@ -60,8 +63,23 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,PrecioUnitarioConDescuento,Cantidad,CarritoId,ProductoId")] CarritoItem carritoItem)
         {
+            var user = await _userManager.GetUserAsync(User);
+            var cliente = await _context.Cliente.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
+
+      //      var producto = await _context.inProducto.Where(p => p.Id == carritoItem.ProductoId)
             if (ModelState.IsValid)
             {
+                var producto = await _context.Producto.Include(p => p.Id).Where(p => p.Id == carritoItem.ProductoId).FirstOrDefaultAsync();
+
+                if (producto == null) {
+                    return NotFound();
+                
+                }
+                var cantidadStock = producto.Stock;
+                if (cantidadStock < carritoItem.Cantidad) 
+                {
+                    return NotFound();
+                }
                 _context.Add(carritoItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
