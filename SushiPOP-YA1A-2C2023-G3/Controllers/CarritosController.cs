@@ -94,8 +94,19 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 
                     return NotFound();
                 }
+                //                var carritoItems = _context.Carrito.Include(c => c.CarritosItems).Where(c => c.ClienteId == cliente.Id).FirstOrDefaultAsync
+                 carrito = await _context.Carrito.Where(c => c.ClienteId == cliente.Id && c.Cancelado == false && c.Procesado == false).FirstOrDefaultAsync();
 
-
+                if (carrito == null) 
+                {
+                    carrito = new Carrito()
+                    {
+                        ClienteId = cliente.Id,
+                        Procesado = false,
+                        Cancelado = false,
+                        CarritosItems = new List<CarritoItem>()
+                    };
+                }
 
                 _context.Add(carrito);
                 await _context.SaveChangesAsync();

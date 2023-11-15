@@ -80,6 +80,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                 {
                     return NotFound();
                 }
+
+                //aca chequearia lo de carrito existente
                 _context.Add(carritoItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SushiPOP_YA1A_2C2023_G3.Models;
 using System.Diagnostics;
 
@@ -7,15 +8,42 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly DbContext _context;
+        public HomeController(ILogger<HomeController> logger, DbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            int hoy = (int)DateTime.Now.DayOfWeek + 1;
+
+            var descuento = await _context.Descuento.Include(d => d.Producto).Where(d => d.Dia == hoy && d.Activo == true).FirstOrDefaultAsync();
+
+            var apertura = 0;
+            var cierre = 0;
+            if (hoy < 5)
+            {
+                apertura = 19;
+                cierre = 23;
+            }
+
+            var descuentoYapertura = new DescuentoMasHorarioVm()
+            {
+                DiaDescuento = hoy,
+                HorarioApertura = apertura,
+                HorarioCierre = cierre,
+                PorcentajeDescuento = descuento.DescuentoMaximo,
+                NombreProducto = descuento.Producto.Nombre
+                };    
+
+            if (descuento == null)
+            {
+                return NotFound();
+            }
+
+                return View("Index", descuentoYapertura);
         }
 
 
