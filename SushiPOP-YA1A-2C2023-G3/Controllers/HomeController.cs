@@ -28,8 +28,20 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                 apertura = 19;
                 cierre = 23;
             }
-
             var descuentoYapertura = new DescuentoMasHorarioVm()
+            {
+                DiaDescuento = hoy,
+                HorarioApertura = apertura,
+                HorarioCierre = cierre,
+                PorcentajeDescuento = -1,
+                NombreProducto = ""
+            };
+            if (descuento == null)
+            {
+                
+                return View("Index",descuentoYapertura);
+            }
+             descuentoYapertura = new DescuentoMasHorarioVm()
             {
                 DiaDescuento = hoy,
                 HorarioApertura = apertura,
@@ -38,10 +50,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                 NombreProducto = descuento.Producto.Nombre
                 };    
 
-            if (descuento == null)
-            {
-                return NotFound();
-            }
+            
 
                 return View("Index", descuentoYapertura);
         }

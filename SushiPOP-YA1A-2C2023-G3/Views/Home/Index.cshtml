@@ -1,4 +1,4 @@
-﻿@model SushiPop.Models.des
+﻿@model DescuentoMasHorarioVm
 
 @{
     ViewData["Title"] = "Home Page";
@@ -6,8 +6,7 @@
     var day = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek);
     DateTime ClockInfoFromSystem = DateTime.Now;
     var dayNumber = (int)ClockInfoFromSystem.DayOfWeek;
-    var porcenajeDescuento = Model.Porcentaje;
-    var productoDescuento = Model.Producto.Nombre;
+
         
 
 
@@ -23,12 +22,12 @@
     <div class="d-flex justify-content-end align-items-center">
         <img class="position-relative" src="https://ch3301files.storage.live.com/y4mv12vXAucLb0KAdeQci335sj-UPHMUiHd6jEp0fpjH9Cz_P4Ny1Lr5rqsWbL8Gd1nXN0lmw3ccu2uui9ks_brJI8U6bXtyLcTB95D0tIZHpNcL-NGsL6SzwRoyNZldto7IIlLZxD8VQtw6lt0pU5L83jS7_7qhiHt2MX-43JaOn6xailvUMOGQtOufWMkgHtPinrCw7aRQ8ZHNzF52ygArA/bg_hero.png?psid=1&width=1440&height=380">
 
-        @if(porcenajeDescuento == -1)
+        @if(Html.DisplayFor(model => model.PorcentajeDescuento).ToString() == "-1")
         {
             <span style=" {position:absolute; color:#FFFFFF}">Hoy es @day. Disfrutá del mejor sushi #EnCasa con amigos</span>
 
         }else{
-        <span style=" {position:absolute; color:#FFFFFF}">Hoy @day ahorrá un @porcenajeDescuento en @productoDescuento!</span>
+            <span style=" {position:absolute; color:#FFFFFF}">Hoy @day ahorrá un @Html.DisplayFor(model => model.PorcentajeDescuento) en   </span>
         }
         
     </div>
