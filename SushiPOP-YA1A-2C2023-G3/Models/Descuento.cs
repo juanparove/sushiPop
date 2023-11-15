@@ -25,6 +25,6 @@ namespace SushiPop.Models
 
         [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public int ProductoId { get; set; }
-        public Producto Producto { get; set; }
+        public Producto? Producto { get; set; }
     }
 }
