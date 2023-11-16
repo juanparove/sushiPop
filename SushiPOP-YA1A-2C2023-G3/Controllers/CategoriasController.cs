@@ -27,6 +27,20 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                           Problem("Entity set 'dbContext.Categoria'  is null.");
         }
 
+        // GET: Categoria por id
+        [HttpGet, ActionName("ObtenerCategoria")]
+
+        public async Task<IActionResult> ObtenerCategoria(int categoriaId)
+        {
+            var categoria = await _context.Categoria.Where(c => c.Id == categoriaId).FirstOrDefaultAsync();
+            if(categoria == null)
+            {
+                return NotFound();
+            }
+
+            return View(categoria);
+        }
+
         // GET: Categorias/Details/5
         public async Task<IActionResult> Details(int? id)
         {

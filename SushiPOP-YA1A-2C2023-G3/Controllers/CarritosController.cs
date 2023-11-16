@@ -213,5 +213,82 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         {
           return (_context.Carrito?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        [HttpGet, ActionName("AgregarAlCarrito")]
+        [Authorize(Roles = "CLIENTE")]
+        public async Task<IActionResult> AgregarAlCarrito(int productoId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var cliente = await _context.Cliente.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
+
+            // Validamos stock
+            var producto = await _context.Producto.Include(p => p.Id).Where(p => p.Id == productoId).FirstOrDefaultAsync();
+            if (producto == null)
+            {
+                return NotFound();
+
+            }
+
+            // Validamos pedido activo
+            var pedido = await _context.Pedido
+               .Include(p => p.Carrito)
+               .Where(p => p.Carrito.ClienteId == cliente.Id
+                    &&
+                    p.Estado == 1)
+                .FirstOrDefaultAsync();
+            if (pedido != null)
+            {
+                return NotFound();
+            }
+
+            // Validamos cantidad de pedidos hechos en el dia
+            var listaPedidos = await _context.Pedido
+                                         .Include(p => p.Carrito)
+                                 .Where(p => p.Carrito.ClienteId == cliente.Id
+                                    &&
+                                    p.FechaCompra.Date == DateTime.Now.Date)
+                                 .ToListAsync();
+            if (listaPedidos.Count == 3)
+            {
+                return NotFound();
+            }
+
+            // Validamos existencia de carrito
+            var carrito = await _context.Carrito.Where(c => c.ClienteId == cliente.Id && c.Cancelado == false && c.Procesado == false).FirstOrDefaultAsync();
+            if (carrito == null)
+            {
+                carrito = new Carrito()
+                {
+                    ClienteId = cliente.Id,
+                    Procesado = false,
+                    Cancelado = false,
+                    CarritosItems = new List<CarritoItem>()
+                };
+            }
+
+            // Validamos si el item ya existe en el carrito
+            var item = carrito.CarritosItems.Where(i => i.ProductoId == productoId).FirstOrDefault();
+            if(item == null)
+            {
+                item = new CarritoItem();
+                item.CarritoId = carrito.Id;
+                item.ProductoId = productoId;
+                item.PrecioUnitarioConDescuento = producto.Precio;
+                item.Cantidad = 1;
+
+                _context.Add(item);
+                await _context.SaveChangesAsync();
+            } else
+            {
+                item.Cantidad += 1;
+
+                _context.Update(item);
+                await _context.SaveChangesAsync();
+            }
+
+            producto.Stock -= 1;
+
+            return View("Producto", Index);
+        }
     }
 }
