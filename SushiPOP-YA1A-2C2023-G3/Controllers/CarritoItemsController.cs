@@ -16,9 +16,10 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         
 
-        public CarritoItemsController(DbContext context)
+        public CarritoItemsController(DbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: CarritoItems
@@ -27,9 +28,10 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             var user = await _userManager.GetUserAsync(User);
             var cliente = await _context.Cliente.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
             var carrito = await _context.Carrito.Where(c => c.ClienteId == cliente.Id).FirstOrDefaultAsync();
-            var carritoItems = await _context.CarritoItem.Where(c => c.CarritoId == carrito.Id).ToListAsync();
 
-            return View(carritoItems);
+
+            var DbContext = _context.CarritoItem.Include(c => c.Carrito).Include(c => c.Producto);
+            return View(await DbContext.Where(c => c.CarritoId == carrito.Id).ToListAsync());
         }
 
         // GET: CarritoItems/Details/5
