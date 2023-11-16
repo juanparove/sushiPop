@@ -214,7 +214,6 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
           return (_context.Carrito?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        [HttpGet, ActionName("AgregarAlCarrito")]
         [Authorize(Roles = "CLIENTE")]
         public async Task<IActionResult> AgregarAlCarrito(int productoId)
         {
@@ -222,7 +221,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             var cliente = await _context.Cliente.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
 
             // Validamos stock
-            var producto = await _context.Producto.Include(p => p.Id).Where(p => p.Id == productoId).FirstOrDefaultAsync();
+            var producto = await _context.Producto.FindAsync(productoId);
             if (producto == null)
             {
                 return NotFound();
@@ -264,6 +263,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                     Cancelado = false,
                     CarritosItems = new List<CarritoItem>()
                 };
+                _context.Add(carrito);
+                await _context.SaveChangesAsync();
             }
 
             // Validamos si el item ya existe en el carrito
@@ -276,6 +277,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                 item.PrecioUnitarioConDescuento = producto.Precio;
                 item.Cantidad = 1;
 
+                carrito.CarritosItems.Add(item);
+                _context.Update(carrito);
                 _context.Add(item);
                 await _context.SaveChangesAsync();
             } else
@@ -287,8 +290,10 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             }
 
             producto.Stock -= 1;
+            _context.Update(producto);
+            await _context.SaveChangesAsync();
 
-            return View("Producto", Index);
+            return View(Index);
         }
     }
 }

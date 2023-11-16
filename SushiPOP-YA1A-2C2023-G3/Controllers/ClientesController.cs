@@ -73,7 +73,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                 //Asignacion de numero de cliente CHEQUEAR
                 var listaClientes = _context.Cliente.ToList();
 
-                if(listaClientes == null)
+                if(listaClientes.Count == 0)
                 {
                     cliente.NumeroCliente = 4200000;
                 }

@@ -38,7 +38,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                 return NotFound();
             }
 
-            return View(categoria);
+            return View("Producto", Index);
         }
 
         // GET: Categorias/Details/5
