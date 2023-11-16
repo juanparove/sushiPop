@@ -17,40 +17,41 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 
         public async Task<IActionResult> Index()
         {
-            int hoy = (int)DateTime.Now.DayOfWeek + 1;
+            int hoy = (int)DateTime.Now.DayOfWeek+1;
 
             var descuento = await _context.Descuento.Include(d => d.Producto).Where(d => d.Dia == hoy && d.Activo == true).FirstOrDefaultAsync();
+            var culture = new System.Globalization.CultureInfo("es-ES");
+            var textohorarios = "hoy" + culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek) + " atendemos de 11 a 14 horas y de 19 a 23 horas por WhatsApp +541140044004 ";
 
-            var apertura = 0;
-            var cierre = 0;
             if (hoy < 5)
             {
-                apertura = 19;
-                cierre = 23;
+                textohorarios = "hoy" + culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek) + " atendemos de 19 a 23 horas por WhatsApp +541140044004 ";
             }
+            
             var descuentoYapertura = new DescuentoMasHorarioVm()
             {
-                DiaDescuento = hoy,
-                HorarioApertura = apertura,
-                HorarioCierre = cierre,
+                Horarios = textohorarios,
+                DiaDescuento = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek),
                 PorcentajeDescuento = -1,
                 NombreProducto = ""
             };
             if (descuento == null)
             {
-                
+                descuentoYapertura.textoDescuento = "Hoy es "+descuentoYapertura.DiaDescuento +" disfrutá del mejor sushi #EnCasa con amigos";
                 return View("Index",descuentoYapertura);
             }
              descuentoYapertura = new DescuentoMasHorarioVm()
             {
-                DiaDescuento = hoy,
-                HorarioApertura = apertura,
-                HorarioCierre = cierre,
-                PorcentajeDescuento = descuento.DescuentoMaximo,
-                NombreProducto = descuento.Producto.Nombre
-                };    
 
-            
+                Horarios = textohorarios,
+                DiaDescuento = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek),
+                PorcentajeDescuento = descuento.DescuentoMaximo,
+                NombreProducto = descuento.Producto.Nombre,
+                };
+            descuentoYapertura.textoDescuento = "Hoy " + descuentoYapertura.DiaDescuento + " ahorra un " + descuentoYapertura.PorcentajeDescuento + "% en " + descuentoYapertura.NombreProducto;
+
+
+
 
                 return View("Index", descuentoYapertura);
         }
