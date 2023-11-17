@@ -28,10 +28,10 @@ namespace SushiPop.Models
         /*
          * Relaciones
          */
-        public virtual Reclamo Reclamo { get; set; }
+        public virtual Reclamo? Reclamo { get; set; }
 
         [Required(ErrorMessage = ErrorViewModel.CampoRequerido)]
         public int CarritoId { get; set; }
-        public Carrito Carrito { get; set; }
+        public Carrito? Carrito { get; set; }
     }
 }

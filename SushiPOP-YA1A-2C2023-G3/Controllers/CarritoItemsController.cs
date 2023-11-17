@@ -27,11 +27,14 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var cliente = await _context.Cliente.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
-            var carrito = await _context.Carrito.Where(c => c.ClienteId == cliente.Id).FirstOrDefaultAsync();
+            var carrito = await _context.Carrito.Include(c => c.CarritosItems).Where(c => c.ClienteId == cliente.Id).FirstOrDefaultAsync();
 
-
-            var DbContext = _context.CarritoItem.Include(c => c.Carrito).Include(c => c.Producto);
-            return View(await DbContext.Where(c => c.CarritoId == carrito.Id).ToListAsync());
+            if (carrito == null) 
+            {
+                return NotFound();
+            }
+          
+            return View(carrito.CarritosItems);
         }
 
         // GET: CarritoItems/Details/5
