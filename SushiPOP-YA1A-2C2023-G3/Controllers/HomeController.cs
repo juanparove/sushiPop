@@ -45,7 +45,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 
                 Horarios = textohorarios,
                 DiaDescuento = culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek),
-                PorcentajeDescuento = descuento.DescuentoMaximo,
+                PorcentajeDescuento = descuento.Porcentaje,
                 NombreProducto = descuento.Producto.Nombre,
                 };
             descuentoYapertura.textoDescuento = "Hoy " + descuentoYapertura.DiaDescuento + " ahorra un " + descuentoYapertura.PorcentajeDescuento + "% en " + descuentoYapertura.NombreProducto;
