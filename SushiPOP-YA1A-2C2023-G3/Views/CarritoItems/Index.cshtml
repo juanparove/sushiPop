@@ -48,6 +48,9 @@
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
+            <a asp-controller="Pedido" asp-action="GenerarPedido" asp-route-carritoId="@item.CarritoId">Finalizar Pedido</a>
 }
     </tbody>
+
 </table>
+

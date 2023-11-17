@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,9 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
     public class PedidosController : Controller
     {
         private readonly DbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private const int EnvioEstandar = 80;
+        private const int NumPedidoInicial = 30000;
 
         public PedidosController(DbContext context)
         {
@@ -167,5 +171,88 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         {
           return (_context.Pedido?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        public async Task<IActionResult> GenerarPedido(int carritoId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var cliente = await _context.Cliente.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
+            //El cliente no puede crear un pedido nuevo si tiene uno en estado Sin confirmar.
+            foreach (var c in cliente.Carritos) 
+            {
+                if (c.Pedido.Estado == 1)
+                {
+                    return NotFound();
+                }
+              
+            }
+            // traer el carrito
+            var carrito = await _context.Carrito.Where(c => c.Id == carritoId).FirstOrDefaultAsync();
+            //generar subtotal
+            decimal subTotal = 0;
+            foreach (var item in carrito.CarritosItems)
+            {
+                subTotal += item.PrecioUnitarioConDescuento * item.Cantidad;
+            }
+            //verificar descuentos
+            var descuento = _context.Descuento.Where(d => d.Dia == DateTime.Now.Day).FirstOrDefault();
+            decimal cantDescuento =0;
+            foreach (var item in carrito.CarritosItems) 
+            {
+                if (item.ProductoId == descuento.ProductoId)
+                {
+                    cantDescuento = item.PrecioUnitarioConDescuento * item.Cantidad * descuento.Porcentaje / 100;
+                }
+            }
+            //costo envio Si el cliente tiene 10 pedidos en estado Entregado en los últimos 30 días, el costo de envío es gratis.
+            int costoEnvio = 80;
+            DateTime fechaActual = DateTime.Now;
+            DateTime fechaHace30Dias = fechaActual.AddDays(-30);
+            var listaPedidos = await _context.Pedido
+                                        .Include(p => p.Carrito)
+                                .Where(p => p.Carrito.ClienteId == cliente.Id
+                                   &&
+                                   p.FechaCompra.Date >= fechaHace30Dias.Date
+                                   &&
+                                   p.Estado==5)
+                                .ToListAsync();
+           
+            if (listaPedidos.Count >= 10)
+            {
+                costoEnvio = 0;
+            }
+            //FALTA CHEQUEAR CLIMA
+
+            //calculo del total
+            var total = subTotal - cantDescuento + costoEnvio;
+            //generar num pedido
+            int numPedido;
+            listaPedidos = await _context.Pedido.OrderByDescending(p => p.NroPedido).ToListAsync();
+            //list = list.OrderByDescending(x => x.AVC).ToList();
+            if (listaPedidos.Count ==0)
+            {
+                numPedido = NumPedidoInicial;
+            }
+            else
+            {
+             numPedido = listaPedidos.First().NroPedido + 5;
+            }
+            // estado 1 y fecha de hoy
+            var pedido = new Pedido()
+            {
+                NroPedido = numPedido,
+                FechaCompra = fechaActual,  
+                Subtotal = subTotal,
+                GastoEnvio = costoEnvio,
+                Total = total,
+                Estado = 1,
+            };
+            _context.Add(pedido);
+            await _context.SaveChangesAsync();
+            //cambiar estado carrito
+            carrito.Procesado = true;
+
+            return View();
+        }
+        
     }
 }
