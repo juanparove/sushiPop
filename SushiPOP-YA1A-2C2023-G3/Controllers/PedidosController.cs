@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SushiPop.Models;
+using SushiPOP_YA1A_2C2023_G3.Models;
 
 namespace SushiPOP_YA1A_2C2023_G3.Controllers
 {
@@ -177,13 +179,13 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             var user = await _userManager.GetUserAsync(User);
             var cliente = await _context.Cliente.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
             //El cliente no puede crear un pedido nuevo si tiene uno en estado Sin confirmar.
-            foreach (var c in cliente.Carritos) 
+            foreach (var c in cliente.Carritos)
             {
                 if (c.Pedido.Estado == 1)
                 {
                     return NotFound();
                 }
-              
+
             }
             // traer el carrito
             var carrito = await _context.Carrito.Where(c => c.Id == carritoId).FirstOrDefaultAsync();
@@ -195,8 +197,8 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             }
             //verificar descuentos
             var descuento = _context.Descuento.Where(d => d.Dia == DateTime.Now.Day).FirstOrDefault();
-            decimal cantDescuento =0;
-            foreach (var item in carrito.CarritosItems) 
+            decimal cantDescuento = 0;
+            foreach (var item in carrito.CarritosItems)
             {
                 if (item.ProductoId == descuento.ProductoId)
                 {
@@ -204,7 +206,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                 }
             }
             //costo envio Si el cliente tiene 10 pedidos en estado Entregado en los últimos 30 días, el costo de envío es gratis.
-            int costoEnvio = 80;
+            decimal costoEnvio = 80;
             DateTime fechaActual = DateTime.Now;
             DateTime fechaHace30Dias = fechaActual.AddDays(-30);
             var listaPedidos = await _context.Pedido
@@ -213,17 +215,35 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                                    &&
                                    p.FechaCompra.Date >= fechaHace30Dias.Date
                                    &&
-                                   p.Estado==5)
+                                   p.Estado == 5)
                                 .ToListAsync();
-           
+
             if (listaPedidos.Count >= 10)
             {
                 costoEnvio = 0;
             }
             //FALTA CHEQUEAR CLIMA
 
-            //calculo del total
-            var total = subTotal - cantDescuento + costoEnvio;
+            string respuesta = string.Empty;
+
+            using (HttpClient client = new HttpClient()) 
+            {
+                string url = "http://api.weatherapi.com/v1/search.json?key=11f624ca55034b1cb98194510231711&q=Buenos_Aires";
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode) 
+                {   
+                    respuesta = await response.Content.ReadAsStringAsync();
+                }
+
+            }
+            var clima = JsonConvert.DeserializeObject<ClimaVm>(respuesta);
+            if (clima.temperatura < 5 || clima.clima.Equals("Rain")) 
+            {
+                costoEnvio = costoEnvio * (decimal) 1.5;
+            }
+
+                //calculo del total
+                var total = subTotal - cantDescuento + costoEnvio;
             //generar num pedido
             int numPedido;
             listaPedidos = await _context.Pedido.OrderByDescending(p => p.NroPedido).ToListAsync();
