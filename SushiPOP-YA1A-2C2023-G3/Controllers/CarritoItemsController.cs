@@ -28,19 +28,19 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             var user = await _userManager.GetUserAsync(User);
             var cliente = await _context.Cliente.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
             var pedido = await _context.Pedido.Include(c => c.Carrito).Where(c => c.Carrito.ClienteId == cliente.Id && (c.Estado != 5 && c.Estado != 6)).FirstOrDefaultAsync();
-            var carrito = await _context.Carrito.Include(c => c.CarritosItems).Where(c => c.ClienteId == cliente.Id && !c.Procesado && !c.Cancelado).FirstOrDefaultAsync();
+            var carritoItems = await _context.CarritoItem.Include(c => c.Carrito).Where(c => c.Carrito.ClienteId == cliente.Id && !c.Carrito.Procesado && !c.Carrito.Cancelado ).Include(c => c.Producto).ToListAsync();
 
             if (pedido != null)
             {
                 int estado = pedido.Estado;
                 return RedirectToAction("PedidoActivo", new { estado = estado });
             }
-            if (carrito == null) 
+            if (carritoItems == null) 
             {
                 return RedirectToAction("CarritoVacio");
             }
           
-            return View(carrito.CarritosItems);
+            return View(carritoItems);
         }
 
         public async Task<IActionResult> CarritoVacio()
@@ -219,9 +219,19 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             {
                 return Problem("Entity set 'dbContext.CarritoItem'  is null.");
             }
-            var carritoItem = await _context.CarritoItem.FindAsync(id);
+            var carritoItem = await _context.CarritoItem.Include(c => c.Producto).Where(c => c.Id == id).FirstOrDefaultAsync();
             if (carritoItem != null)
             {
+                var productId = carritoItem.ProductoId;
+                var product = await _context.Producto.Where(p => p.Id == productId).FirstOrDefaultAsync();
+                if(product != null)
+                {
+                    product.Stock++;
+                    _context.Producto.Update(product);
+                } else
+                {
+                    _context.Producto.Add(carritoItem.Producto);
+                }
                 _context.CarritoItem.Remove(carritoItem);
             }
             

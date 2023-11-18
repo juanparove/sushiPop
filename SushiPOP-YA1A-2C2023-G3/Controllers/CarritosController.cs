@@ -229,7 +229,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             }
 
             // Validamos pedido activo
-            var pedido = await _context.Pedido.Include(p => p.Carrito).Where(p => p.Carrito.ClienteId == cliente.Id && p.Estado == 1).FirstOrDefaultAsync();
+            var pedido = await _context.Pedido.Include(p => p.Carrito).Where(p => p.Carrito.ClienteId == cliente.Id && (p.Estado != 5 && p.Estado != 6)).FirstOrDefaultAsync();
             if (pedido != null)
             {
                 return NotFound();
