@@ -90,7 +90,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             return View(cliente); 
         }

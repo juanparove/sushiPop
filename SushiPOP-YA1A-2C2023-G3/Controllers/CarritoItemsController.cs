@@ -27,14 +27,49 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var cliente = await _context.Cliente.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
-            var carrito = await _context.Carrito.Include(c => c.CarritosItems).Where(c => c.ClienteId == cliente.Id).FirstOrDefaultAsync();
+            var pedido = await _context.Pedido.Include(c => c.Carrito).Where(c => c.Carrito.ClienteId == cliente.Id && (c.Estado != 5 && c.Estado != 6)).FirstOrDefaultAsync();
+            var carrito = await _context.Carrito.Include(c => c.CarritosItems).Where(c => c.ClienteId == cliente.Id && !c.Procesado && !c.Cancelado).FirstOrDefaultAsync();
 
+            if (pedido != null)
+            {
+                int estado = pedido.Estado;
+                return RedirectToAction("PedidoActivo", new { estado = estado });
+            }
             if (carrito == null) 
             {
-                return NotFound();
+                return RedirectToAction("CarritoVacio");
             }
           
             return View(carrito.CarritosItems);
+        }
+
+        public async Task<IActionResult> CarritoVacio()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> PedidoActivo(int estado)
+        {
+            
+            string estadoActual = "";
+            switch(estado)
+            {
+                case 1:
+                    estadoActual = "Sin Confirmar";
+                    break;
+                case 2:
+                    estadoActual = "Confirmado";
+                    break;
+                case 3:
+                    estadoActual = "En preparación";
+                    break;
+                case 4:
+                    estadoActual = "En reparto";
+                    break;
+                    break;
+            }
+            ViewData["estado"] = estadoActual;
+            return View();
         }
 
         // GET: CarritoItems/Details/5

@@ -1,0 +1,82 @@
+﻿@model IEnumerable<SushiPop.Models.Pedido>
+
+@{
+    ViewData["Title"] = "GestorPedidos";
+}
+
+<h1>Gestor de Pedidos</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NroPedido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaCompra)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subtotal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GastoEnvio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Carrito)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NroPedido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaCompra)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subtotal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GastoEnvio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Carrito.Id)
+                </td>
+                <td>
+                    <a asp-action="EmpleadoCambiarEstado" asp-route-idPedido=@item.Id asp-route-estadoPedido="2"><button>Confirmar</button></a>
+                    <a asp-action="EmpleadoCambiarEstado" asp-route-idPedido=@item.Id asp-route-estadoPedido="3"><button>En preparación</button></a>
+                    <a asp-action="EmpleadoCambiarEstado" asp-route-idPedido=@item.Id asp-route-estadoPedido="4"><button>En reparto</button></a>
+                    <a asp-action="EmpleadoCambiarEstado" asp-route-idPedido=@item.Id asp-route-estadoPedido="5"><button>Entregado</button></a>
+                    <a asp-action="EmpleadoCambiarEstado" asp-route-idPedido=@item.Id asp-route-estadoPedido="6"><button>Cancelado</button></a>
+                </td>
+
+               @*  <form  asp-action="EmpleadoCambiarEstado" asp-route-estado=@value>
+                    <select id="estadoPedido" name="estadoPedido">
+                        <option value="2">Confirmado</option>
+                        <option value="3">En preparación</option>
+                        <option value="4">En reparto</option>
+                        <option value="5">Entregado</option>
+                        <option value="6">Cancelado</option>
+                    </select>
+                    <input type="submit" value="Cambiar estado">
+                </form> *@
+            </tr>
+        }
+    </tbody>
+</table>

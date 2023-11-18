@@ -34,6 +34,29 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             return View(await DbContext.ToListAsync());
         }
 
+        public async Task<IActionResult> PedidoRealizado(Pedido pedido)
+        {
+            return View(pedido);
+        }
+
+        public async Task<IActionResult> GestorPedidos()
+        {
+            var DbContext = _context.Pedido.Include(p => p.Carrito).OrderByDescending(c => c.FechaCompra).ToListAsync();
+            return View(await DbContext);
+        }
+
+        public async Task<IActionResult> EmpleadoCambiarEstado(int idPedido, int estadoPedido)
+        {
+            var pedido = _context.Pedido.Where(c => c.Id == idPedido).FirstOrDefault();
+            if (pedido == null)
+            {
+                return NotFound();
+            }
+            pedido.Estado = estadoPedido;
+            _context.Update(pedido);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("GestorPedidos");
+        }
         // GET: Pedidos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -228,10 +251,10 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             //FALTA CHEQUEAR CLIMA
 
             string respuesta = string.Empty;
-/*
+
             using (HttpClient client = new HttpClient()) 
             {
-                string url = "http://api.weatherapi.com/v1/search.json?key=11f624ca55034b1cb98194510231711&q=Buenos_Aires";
+                string url = "http://api.weatherapi.com/v1/current.json?key=11f624ca55034b1cb98194510231711&q=-34.61315,-58.37723";
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode) 
                 {   
@@ -239,12 +262,16 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
                 }
 
             }
+            if(respuesta == null)
+            {
+                return NotFound();
+            }
             var clima = JsonConvert.DeserializeObject<ClimaVm>(respuesta);
-            if (clima.temperatura < 5 || clima.clima.Equals("Rain")) 
+            if (clima.current.temperatura < 5 || clima.current.condition.clima.Equals("Rain")) 
             {
                 costoEnvio = costoEnvio * (decimal) 1.5;
             }
-*/
+
                 //calculo del total
                 var total = subTotal - cantDescuento + costoEnvio;
             //generar num pedido
@@ -277,7 +304,7 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
             _context.Update(carrito);
             await _context.SaveChangesAsync();
 
-            return View();
+            return RedirectToAction("PedidoRealizado", pedido);
         }
         
     }
