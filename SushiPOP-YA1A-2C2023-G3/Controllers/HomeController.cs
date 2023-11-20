@@ -21,11 +21,11 @@ namespace SushiPOP_YA1A_2C2023_G3.Controllers
 
             var descuento = await _context.Descuento.Include(d => d.Producto).Where(d => d.Dia == hoy && d.Activo == true).FirstOrDefaultAsync();
             var culture = new System.Globalization.CultureInfo("es-ES");
-            var textohorarios = "hoy" + culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek) + " atendemos de 11 a 14 horas y de 19 a 23 horas por WhatsApp +541140044004 ";
+            var textohorarios = "hoy " + culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek) + " atendemos de 11 a 14 horas y de 19 a 23 horas por WhatsApp +541140044004 ";
 
             if (hoy < 5)
             {
-                textohorarios = "hoy" + culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek) + " atendemos de 19 a 23 horas por WhatsApp +541140044004 ";
+                textohorarios = "hoy " + culture.DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek) + " atendemos de 19 a 23 horas por WhatsApp +541140044004 ";
             }
             
             var descuentoYapertura = new DescuentoMasHorarioVm()
