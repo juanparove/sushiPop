@@ -1,10 +1,85 @@
-﻿@model IEnumerable<SushiPop.Models.Pedido>
+﻿@model SushiPop.Models.Pedido
 
 @{
     ViewData["Title"] = "PedidoRealizado";
 }
 
-<h1>Pedido Realizado</h1>
+<h1>Pedido</h1>
+
+<head>
+    <title>Imágenes en paralelo</title>
+    <style>
+        .column-container {
+            columns: 4; /* Número de columnas */
+            column-gap: 20px; /* Espacio entre columnas */
+        }
+
+            .column-container p {
+                margin-bottom: 10px;
+            }
+
+        .image-container{
+            width: 200px; /* Ancho deseado del contenedor */
+            height: 200px; /* Altura deseada del contenedor */
+            background-color: #ddd; /* Color gris de fondo */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+           .image-container img {
+                max-width: 100%; /* Ajusta el tamaño de la imagen dentro del contenedor */
+                max-height: 100%;
+            }
+    </style>
+</head>
+<body>
+    <div class="column-container">
+        <p>
+            <img class="image-container" src="ruta_de_la_imagen_1.jpg" alt="Imagen 1">
+        </p>
+        <p>
+            <img class="image-container" src="ruta_de_la_imagen_2.jpg" alt="Imagen 2">
+        </p>
+        <p>
+            <img class="image-container" src="ruta_de_la_imagen_3.jpg" alt="Imagen 3">
+        </p>
+        <p>
+            <img class="image-container" src="ruta_de_la_imagen_4.jpg" alt="Imagen 4">
+        </p>
+        </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Subtotal)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.GastoEnvio)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(model => model.Total)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>
+                    @Html.DisplayFor(modelItem => Model.Subtotal)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => Model.GastoEnvio)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => Model.Total)
+                </th>
+            </tr>
+        </tbody>
+    </table>
+
+    <a asp-controller="Home" asp-action="Index"><button class="btn btn-primary" type="submit">Finalizar</button></a>
+</body>
 
 @* <div>
     <p>Numero de pedido: <span></span></p>
