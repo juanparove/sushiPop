@@ -4,74 +4,33 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Productos</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Costo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                <img src=@item.Foto alt="imagen" width="150px"
-                 height="150px"/>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Stock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Costo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Categoria.Id)
-            </td>
-            <td>
-                    @if (User.IsInRole("EMPLEADO"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    }
-                    @if (User.IsInRole("CLIENTE"))
-                    {
-                        <a asp-controller="Carritos" asp-action="AgregarAlCarrito" asp-route-productoId="@item.Id">Agregar al Carrito</a>
-                    }
-            </td>
-        </tr>
+@if (User.IsInRole("EMPLEADO"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
 }
-    </tbody>
-</table>
+<container class="flex-wrap row">
+            @foreach (var item in Model)
+            {
+                <div class="card col-3 m-2">
+                    <img src=@Html.DisplayFor(modelItem => item.Foto) class="card-img-top img-fluid h-50 mt-2" alt="fotoImagen">
+                    <div class="card-body">
+                        <h5 class="card-title">@Html.DisplayFor(modelItem=> item.Nombre)</h5>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Descripcion)</p>
+
+                        @if (User.IsInRole("EMPLEADO"))
+                        {
+                            <a asp-action="Editar producto" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                        }
+                        @if (User.IsInRole("CLIENTE"))
+                        {
+                            <a asp-controller="Carritos" asp-action="AgregarAlCarrito" asp-route-productoId="@item.Id" class="btn btn-primary">Agregar al Carrito</a>
+                        }
+                    </div>
+                </div>
+            }
+</container>
+
