@@ -1,0 +1,29 @@
+﻿ @model SushiPop.Models.Categoria
+
+
+@{
+	if(Model!= null)
+	{
+		foreach(var producto in Model.Productos)
+		{
+			<div class="card" style="width: 18rem;">
+
+				<img src="..." class="card-img-top" alt="...">
+
+				<div class="card-body">
+
+					<h5 class="card-title">@Html.DisplayFor(modelItem => producto.Nombre)</h5>
+
+					<p class="card-text">@Html.DisplayFor(modelItem => producto.Descripcion)</p>
+
+					<a href="#" class="btn btn-primary">Comprar</a>
+
+				</div>
+			</div>
+		}
+	}
+}
+
+
+
+

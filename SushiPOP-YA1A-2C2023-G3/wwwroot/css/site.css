@@ -48,3 +48,20 @@ footer {
   font-size: 10px
 }
 
+.palabras-clave-header{
+    font-weight: bold;
+    color: indianred
+}
+
+.combos-estilos {
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    width: 100%
+    
+}
+
+
+.hero-text{
+    font-weight: bold;
+    padding-left: 5px
+}
